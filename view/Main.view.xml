@@ -1,0 +1,71 @@
+    <mvc:View
+    controllerName="com.poc.fiori.controller.Main"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    displayBlock="true">
+
+    <Shell>
+        <App>
+        <pages>
+            <Page
+            title="{i18n>appTitle}"
+            showHeader="true">
+
+            <subHeader>
+                <Bar>
+                <contentMiddle>
+                    <SearchField
+                    placeholder="{i18n>searchPlaceholder}"
+                    liveChange=".onSearch"
+                    width="40%" />
+                </contentMiddle>
+                </Bar>
+            </subHeader>
+
+            <content>
+                <List
+                id="productList"
+                items="{products>/products}"
+                mode="SingleSelectMaster"
+                selectionChange=".onItemSelect"
+                noDataText="{i18n>noDataText}">
+
+                <items>
+                    <ObjectListItem
+                    title="{products>name}"
+                    number="{products>price}"
+                    numberUnit="USD"
+                    intro="{products>category}">
+
+                    <attributes>
+                        <ObjectAttribute text="{products>status}" />
+                    </attributes>
+
+                    <firstStatus>
+                        <ObjectStatus
+                        text="{products>stock}"
+                        state="{parts: [{path: 'products>stock'}], formatter: '.formatStockState'}" />
+                    </firstStatus>
+                    </ObjectListItem>
+                </items>
+                </List>
+            </content>
+
+            <footer>
+                <Bar>
+                <contentRight>
+                    <Button
+                    text="{i18n>addProduct}"
+                    type="Emphasized"
+                    press=".onAddProduct"
+                    icon="sap-icon://add" />
+                </contentRight>
+                </Bar>
+            </footer>
+
+            </Page>
+        </pages>
+        </App>
+    </Shell>
+
+    </mvc:View>
