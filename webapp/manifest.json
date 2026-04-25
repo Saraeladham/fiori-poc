@@ -39,10 +39,12 @@
             }
         },
         "models": {
-        "i18n": {
-            "type": "sap.ui.model.resource.ResourceModel",
-            "settings": {
-            "bundleName": "com.poc.fiori.i18n.i18n"
+            "i18n": {
+                "type": "sap.ui.model.resource.ResourceModel",
+                "settings": {
+                "bundleUrl": "i18n/i18n.properties",
+                "supportedLocales": [""],
+                "fallbackLocale": ""
                 }
             }
         }
