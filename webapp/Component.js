@@ -15,7 +15,7 @@
         UIComponent.prototype.init.apply(this, arguments);
 
         // Load local JSON model (simulates OData/backend)
-        var oModel = new JSONModel("model/products.json");
+        var oModel = new JSONModel(sap.ui.require.toUrl("com/poc/fiori/model/products.json"));
         this.setModel(oModel, "products");
         }
     });

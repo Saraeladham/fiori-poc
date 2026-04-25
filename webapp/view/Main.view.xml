@@ -1,0 +1,268 @@
+    <mvc:View
+    controllerName="com.poc.fiori.controller.Main"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:f="sap.f"
+    xmlns:core="sap.ui.core"
+    xmlns:layout="sap.ui.layout"
+    displayBlock="true">
+
+    <Shell>
+        <App id="app">
+        <pages>
+
+            <!-- ═══════════════════════════════════════════
+                DynamicPage replaces Page
+                snappedTitle collapses on scroll
+                expandedTitle shows when at top
+            ════════════════════════════════════════════ -->
+            <f:DynamicPage
+            id="dynamicPage"
+            headerExpanded="true"
+            toggleHeaderOnTitleClick="true"
+            fitContent="false">
+
+            <!-- ── TITLE AREA ── -->
+            <f:title>
+                <f:DynamicPageTitle>
+
+                    <f:heading>
+                    <Title text="{i18n>appTitle}" level="H2" />
+                    </f:heading>
+
+                    <f:snappedHeading>
+                    <HBox alignItems="Center">
+                        <Title
+                        text="{i18n>appTitle}"
+                        level="H4"
+                        class="sapUiSmallMarginEnd" />
+                        <ObjectStatus
+                        id="snappedCount"
+                        text=""
+                        state="Information" />
+                    </HBox>
+                    </f:snappedHeading>
+
+                    <!-- REMOVE the <f:content> block entirely — no icons -->
+
+                    <f:actions>
+                    <Button
+                        text="{i18n>addProduct}"
+                        type="Emphasized"
+                        icon="sap-icon://add"
+                        press=".onAddProduct" />
+                    </f:actions>
+
+                </f:DynamicPageTitle>
+                </f:title>
+
+            <!-- ── HEADER (collapses on scroll) ── -->
+            <f:header>
+                <f:DynamicPageHeader pinnable="true">
+                <VBox class="sapUiSmallMarginBegin sapUiSmallMarginEnd">
+
+                    <!-- Search + Filter Bar -->
+                    <HBox alignItems="Center" wrap="Wrap" class="sapUiSmallMarginBottom">
+                    <SearchField
+                        id="searchField"
+                        placeholder="{i18n>searchPlaceholder}"
+                        liveChange=".onSearch"
+                        width="20rem"
+                        class="sapUiSmallMarginEnd" />
+                    <Select
+                        id="categoryFilter"
+                        change=".onCategoryFilter"
+                        class="sapUiSmallMarginEnd">
+                        <items>
+                        <core:Item key="ALL"         text="All Categories" />
+                        <core:Item key="Electronics" text="Electronics" />
+                        <core:Item key="Accessories" text="Accessories" />
+                        <core:Item key="Software"    text="Software" />
+                        <core:Item key="Hardware"    text="Hardware" />
+                        </items>
+                    </Select>
+                    <Select
+                        id="stockFilter"
+                        change=".onStockFilter">
+                        <items>
+                        <core:Item key="ALL"          text="All Stock Levels" />
+                        <core:Item key="In Stock"     text="In Stock" />
+                        <core:Item key="Low Stock"    text="Low Stock" />
+                        <core:Item key="Out of Stock" text="Out of Stock" />
+                        </items>
+                    </Select>
+                    </HBox>
+
+                    <!-- Message Strip -->
+                    <MessageStrip
+                    id="messageStrip"
+                    text=""
+                    type="Success"
+                    showIcon="true"
+                    showCloseButton="true"
+                    visible="false"
+                    class="sapUiSmallMarginBottom"
+                    close=".onMessageStripClose" />
+
+                </VBox>
+                </f:DynamicPageHeader>
+            </f:header>
+
+            <!-- ── CONTENT ── -->
+            <f:content>
+                <VBox class="sapUiSmallMarginBegin sapUiSmallMarginEnd">
+
+                <!-- Growing List with enhanced rows -->
+                <List
+                    id="productList"
+                    items="{products>/products}"
+                    mode="None"
+                    noDataText="{i18n>noDataText}"
+                    growing="true"
+                    growingThreshold="20"
+                    growingScrollToLoad="false"
+                    showSeparators="Inner">
+
+                    <items>
+                    <CustomListItem
+                        press=".onItemPress"
+                        type="Active"
+                        class="sapUiSmallMarginTopBottom">
+
+                        <VBox class="sapUiSmallMargin">
+
+                        <!-- ── TOP ROW: Name + Price ── -->
+                        <HBox
+                            justifyContent="SpaceBetween"
+                            alignItems="Center"
+                            class="sapUiSmallMarginBottom">
+
+                            <HBox alignItems="Center">
+                            <core:Icon
+                                src="sap-icon://product"
+                                size="1.2rem"
+                                color="var(--sapBrandColor)"
+                                class="sapUiSmallMarginEnd" />
+                            <VBox>
+                                <Title
+                                text="{products>name}"
+                                level="H5" />
+                                <HBox alignItems="Center" class="sapUiTinyMarginTop">
+                                <core:Icon
+                                    src="sap-icon://category"
+                                    size="0.75rem"
+                                    class="sapUiTinyMarginEnd" />
+                                <Text
+                                    text="{products>category}"
+                                    class="sapUiTinyText" />
+                                </HBox>
+                            </VBox>
+                            </HBox>
+
+                            <HBox alignItems="Center">
+                            <ObjectNumber
+                                number="{products>price}"
+                                unit="USD"
+                                state="None"
+                                class="sapUiSmallMarginEnd" />
+                            <ObjectStatus
+                                text="{products>stock}"
+                                state="{
+                                path: 'products>stock',
+                                formatter: '.formatStockState'
+                                }" />
+                            </HBox>
+
+                        </HBox>
+
+                        <!-- ── BOTTOM ROW: Status badge + hint ── -->
+                        <HBox
+                            alignItems="Center"
+                            justifyContent="SpaceBetween">
+                            <HBox alignItems="Center">
+                            <ObjectStatus
+                                text="{products>status}"
+                                state="{
+                                path: 'products>status',
+                                formatter: '.formatProductStatus'
+                                }"
+                                icon="{
+                                path: 'products>status',
+                                formatter: '.formatStatusIcon'
+                                }" />
+                            </HBox>
+                            <Text
+                            text="Tap for options"
+                            class="sapUiTinyText sapThemeTextInverted" />
+                        </HBox>
+
+                        <!-- ── EXPANDED DETAILS (toggle via Details menu) ── -->
+                        <VBox
+                            visible="{products>_expanded}"
+                            class="sapUiSmallMarginTop">
+
+                            <HBox class="sapUiSmallMarginBottom">
+                            <core:HTML content="&lt;hr style='border:none;border-top:1px solid var(--sapList_BorderColor);width:100%;margin:0'/&gt;" />
+                            </HBox>
+
+                            <HBox wrap="Wrap" justifyContent="Start">
+
+                            <VBox
+                                class="sapUiSmallMarginEnd sapUiSmallMarginBottom"
+                                width="8rem">
+                                <Label text="Product ID" design="Bold" />
+                                <Text text="{products>id}" />
+                            </VBox>
+
+                            <VBox
+                                class="sapUiSmallMarginEnd sapUiSmallMarginBottom"
+                                width="8rem">
+                                <Label text="Category" design="Bold" />
+                                <Text text="{products>category}" />
+                            </VBox>
+
+                            <VBox
+                                class="sapUiSmallMarginEnd sapUiSmallMarginBottom"
+                                width="8rem">
+                                <Label text="Status" design="Bold" />
+                                <Text text="{products>status}" />
+                            </VBox>
+
+                            <VBox
+                                class="sapUiSmallMarginEnd sapUiSmallMarginBottom"
+                                width="8rem">
+                                <Label text="Stock Level" design="Bold" />
+                                <ObjectStatus
+                                text="{products>stock}"
+                                state="{
+                                    path: 'products>stock',
+                                    formatter: '.formatStockState'
+                                }" />
+                            </VBox>
+
+                            <VBox
+                                class="sapUiSmallMarginBottom"
+                                width="8rem">
+                                <Label text="Price" design="Bold" />
+                                <ObjectNumber
+                                number="{products>price}"
+                                unit="USD" />
+                            </VBox>
+
+                            </HBox>
+                        </VBox>
+
+                        </VBox>
+                    </CustomListItem>
+                    </items>
+
+                </List>
+                </VBox>
+            </f:content>
+
+            </f:DynamicPage>
+        </pages>
+        </App>
+    </Shell>
+
+    </mvc:View>

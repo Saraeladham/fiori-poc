@@ -1,0 +1,87 @@
+    <core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:l="sap.ui.layout">
+
+    <Dialog
+        id="productDialog"
+        title="{dialog>/title}"
+        contentWidth="400px"
+        draggable="true"
+        resizable="true">
+
+        <content>
+        <VBox class="sapUiSmallMargin">
+
+            <Label text="Product Name" required="true" />
+            <Input
+            id="inputName"
+            value="{dialog>/name}"
+            placeholder="Enter product name"
+            class="sapUiSmallMarginBottom" />
+
+            <Label text="Category" required="true" />
+            <Select
+            id="inputCategory"
+            selectedKey="{dialog>/category}"
+            class="sapUiSmallMarginBottom">
+            <items>
+                <core:Item key="Electronics" text="Electronics" />
+                <core:Item key="Accessories" text="Accessories" />
+                <core:Item key="Software" text="Software" />
+                <core:Item key="Hardware" text="Hardware" />
+            </items>
+            </Select>
+
+            <Label text="Price (USD)" required="true" />
+            <Input
+            id="inputPrice"
+            value="{dialog>/price}"
+            placeholder="e.g. 299.99"
+            type="Number"
+            class="sapUiSmallMarginBottom" />
+
+            <Label text="Status" />
+            <Select
+            id="inputStatus"
+            selectedKey="{dialog>/status}"
+            class="sapUiSmallMarginBottom">
+            <items>
+                <core:Item key="Available" text="Available" />
+                <core:Item key="Discontinued" text="Discontinued" />
+                <core:Item key="Coming Soon" text="Coming Soon" />
+            </items>
+            </Select>
+
+            <Label text="Stock Level" />
+            <Select
+            id="inputStock"
+            selectedKey="{dialog>/stock}"
+            class="sapUiSmallMarginBottom">
+            <items>
+                <core:Item key="In Stock" text="In Stock" />
+                <core:Item key="Low Stock" text="Low Stock" />
+                <core:Item key="Out of Stock" text="Out of Stock" />
+            </items>
+            </Select>
+
+        </VBox>
+        </content>
+
+        <beginButton>
+        <Button
+            text="{dialog>/saveLabel}"
+            type="Emphasized"
+            press=".onSaveProduct" />
+        </beginButton>
+
+        <endButton>
+        <Button
+            text="Cancel"
+            type="Default"
+            press=".onCancelDialog" />
+        </endButton>
+
+    </Dialog>
+
+    </core:FragmentDefinition>

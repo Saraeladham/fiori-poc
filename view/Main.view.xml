@@ -2,17 +2,23 @@
     controllerName="com.poc.fiori.controller.Main"
     xmlns:mvc="sap.ui.core.mvc"
     xmlns="sap.m"
+    xmlns:core="sap.ui.core"
     displayBlock="true">
 
     <Shell>
         <App>
         <pages>
-            <Page
-            title="{i18n>appTitle}"
-            showHeader="true">
+            <Page title="{i18n>appTitle}" showHeader="true">
+
+            <!-- MESSAGE STRIP for notifications -->
+            <headerContent>
+            </headerContent>
 
             <subHeader>
                 <Bar>
+                <contentLeft>
+                    <Title text="{i18n>subHeaderTitle}" level="H4" />
+                </contentLeft>
                 <contentMiddle>
                     <SearchField
                     placeholder="{i18n>searchPlaceholder}"
@@ -23,6 +29,19 @@
             </subHeader>
 
             <content>
+
+                <!-- MESSAGE STRIP — shown/hidden by controller -->
+                <MessageStrip
+                id="messageStrip"
+                text=""
+                type="Success"
+                showIcon="true"
+                showCloseButton="true"
+                visible="false"
+                class="sapUiSmallMarginTop sapUiSmallMarginBegin sapUiSmallMarginEnd"
+                close=".onMessageStripClose" />
+
+                <!-- PRODUCT LIST -->
                 <List
                 id="productList"
                 items="{products>/products}"
@@ -44,21 +63,43 @@
                     <firstStatus>
                         <ObjectStatus
                         text="{products>stock}"
-                        state="{parts: [{path: 'products>stock'}], formatter: '.formatStockState'}" />
+                        state="{
+                            path: 'products>stock',
+                            formatter: '.formatStockState'
+                        }" />
                     </firstStatus>
+
                     </ObjectListItem>
                 </items>
                 </List>
+
             </content>
 
+            <!-- FOOTER with Add, Edit, Delete -->
             <footer>
                 <Bar>
+                <contentLeft>
+                    <Button
+                    id="editBtn"
+                    text="{i18n>editProduct}"
+                    type="Default"
+                    icon="sap-icon://edit"
+                    enabled="false"
+                    press=".onEditProduct" />
+                    <Button
+                    id="deleteBtn"
+                    text="{i18n>deleteProduct}"
+                    type="Reject"
+                    icon="sap-icon://delete"
+                    enabled="false"
+                    press=".onDeleteProduct" />
+                </contentLeft>
                 <contentRight>
                     <Button
                     text="{i18n>addProduct}"
                     type="Emphasized"
-                    press=".onAddProduct"
-                    icon="sap-icon://add" />
+                    icon="sap-icon://add"
+                    press=".onAddProduct" />
                 </contentRight>
                 </Bar>
             </footer>
